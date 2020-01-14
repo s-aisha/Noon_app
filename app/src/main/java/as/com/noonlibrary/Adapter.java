@@ -1,0 +1,92 @@
+package as.com.noonlibrary;
+
+import android.content.Context;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+
+
+import com.bumptech.glide.Glide;
+
+import java.util.List;
+
+
+
+public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
+
+    private List<Store> listitem;
+    private Context context;
+    private PopupWindow libraryPopup;
+
+
+    public Adapter(Context context, List<Store> listitem) {
+        this.listitem = listitem;
+        this.context = context;
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder{
+
+
+
+        private TextView bookName, sem, bookId, availability;
+        private ImageView bookImage;
+        private Button borrow;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+
+            bookName = (TextView) itemView.findViewById(R.id.bookname);
+            sem = (TextView) itemView.findViewById(R.id.sem);
+            bookId = (TextView) itemView.findViewById(R.id.bookid);
+            availability = (TextView) itemView.findViewById(R.id.availabilityno);
+            bookImage = (ImageView) itemView.findViewById(R.id.bookimage);
+            borrow = (Button) itemView.findViewById(R.id.borrow);
+
+        }
+    }
+
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem,parent,false);
+        return new ViewHolder(v);
+    }
+
+
+    @Override
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+
+        Store homeInitialiser = listitem.get(position);
+        holder.bookName.setText(" "+homeInitialiser.getBookName());
+        holder.bookId.setText(" "+homeInitialiser.getBookId());
+        holder.availability.setText(" "+homeInitialiser.getAvailability());
+        holder.sem.setText(" "+homeInitialiser.getSem());
+        Glide.with(context).load(homeInitialiser.getImage()).into(holder.bookImage);
+
+        holder.borrow.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                LibraryPopup dialogFragment = new LibraryPopup();
+                dialogFragment.show(((FragmentActivity)context).getSupportFragmentManager(), "OpenPopup");
+
+            }
+        });
+
+    }
+
+
+
+    @Override
+    public int getItemCount() {
+        return listitem.size();
+    }
+}
